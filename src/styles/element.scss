@@ -1,0 +1,10 @@
+.headerDrop{
+    border-radius: 8px!important;
+    .el-dropdown-menu__item:hover {
+        background-color: #F2F9FC!important;
+        color: var(--primary)!important;
+        .icon{
+            fill: var(--primary)!important;
+        }
+    }
+}

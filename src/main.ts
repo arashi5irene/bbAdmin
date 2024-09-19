@@ -1,11 +1,13 @@
 import '@/styles/tailwind.css';
+import '@/styles/element.scss';
 import './assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
 import App from './App.vue'
 import router from './router'
+
+import 'virtual:svg-icons-register'
 
 const app = createApp(App)
 

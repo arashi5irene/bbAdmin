@@ -1,10 +1,25 @@
 @import './base.css';
 
 #app {
-  max-width: 1280px;
+  /* max-width: 1280px; */
   margin: 0 auto;
-  padding: 2rem;
   font-weight: normal;
+}
+.el-popper__arrow{
+  &::before{
+      content: none!important;
+  }
+}
+@font-face {
+  font-family: "NotoSansTC-Regular";
+  src: url('./font/NotoSansTC-Regular.ttf');
+}
+@font-face {
+  font-family: "Roboto-Regular";
+  src: url('./font/Roboto-Regular.ttf');
+}
+html{
+  font-family: "NotoSansTC-Regular", sans-serif!important;
 }
 
 a,
@@ -14,7 +29,7 @@ a,
   transition: 0.4s;
   padding: 3px;
 }
-
+/* 
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
@@ -32,4 +47,4 @@ a,
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
   }
-}
+} */
