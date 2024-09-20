@@ -27,4 +27,8 @@ import Menu from './Menu/Menu.vue'
     height: 80px;
     box-shadow: 14px 0px 24px rgba(51, 77, 110, 0.1);
 }
+.el-main{
+    background-color: #F4F6F9;
+    padding: 0;
+}
 </style>

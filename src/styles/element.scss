@@ -8,3 +8,8 @@
         }
     }
 }
+.el-popper__arrow{
+    &::before{
+        content: none!important;
+    }
+  }

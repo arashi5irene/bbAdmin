@@ -5,11 +5,7 @@
   margin: 0 auto;
   font-weight: normal;
 }
-.el-popper__arrow{
-  &::before{
-      content: none!important;
-  }
-}
+
 @font-face {
   font-family: "NotoSansTC-Regular";
   src: url('./font/NotoSansTC-Regular.ttf');
@@ -22,6 +18,21 @@ html{
   font-family: "NotoSansTC-Regular", sans-serif!important;
 }
 
+.card{
+  background: #fff;
+  border: 1px solid #DBE2EB;
+  border-radius: 8px;
+  margin:12px;
+}
+.cardTitle{
+  border-bottom:1px solid #DBE2EB; 
+  height:80px;
+  width: 100%;
+  font-size: 18px;
+  padding-left:24px;
+  display: flex;
+  align-items: center;
+}
 a,
 .green {
   text-decoration: none;

@@ -11,7 +11,8 @@ module.exports = {
         primary:'var(--primary)',
         secondary:'var(--secondary)',
         waring:'var(--waring)',
-        danger:'var(--danger)'
+        danger:'var(--danger)',
+        borderCol:'var(--borderColor)'
       }
     }
   }
