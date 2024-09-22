@@ -15,8 +15,8 @@
                         <div class="w-full text-base text-center" style="color:#65758D">次</div>
                     </div>
                 </div>
-                <div class="list-none w-full">
-                    <div v-for="(item, i) in chartData" :key="i" >
+                <div class="list-nones w-1/4s">
+                    <div v-for="(item, i) in chartData" :key="i" class="w-full pt-1">
                         <div class="w-4 h-4 inline-block" :style="getBgColorStyle(i)"></div>
                         {{ item.name }}
                     </div>
@@ -107,8 +107,9 @@ function render() {
 
   myChart.setOption(option)
 }
-const getBgColorStyle = (i)=>{
-    return 
+const getBgColorStyle = (i:number)=>{
+    console.log('aaaa', i, chartColor.value[i])
+    return `background:${chartColor.value[i]}`||''
 }
 onMounted(() => {
   render()

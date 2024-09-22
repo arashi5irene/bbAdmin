@@ -5,4 +5,6 @@
     <RouterView />
   </el-config-provider>
 </template>
+<style lang="less">
+</style>
 

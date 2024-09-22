@@ -24,7 +24,9 @@
 import SvgIcon from '@/components/SvgIcon.vue';
 </script>
 <style lang="scss" scoped>
+
 .el-menu-item{
+    font-family: "NotoSans", "roboto-regular"!important;
     margin:16px 8px;
     border-radius: 8px;
     font-size: 18px;
