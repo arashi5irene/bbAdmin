@@ -1,11 +1,11 @@
 @font-face {
     font-family: 'NotoSans';
-    src: url('./Noto-Sans-regular.woff2') format('woff2');
+    src: url('./noto-sans-tc-v9-chinese-traditional-regular.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
   }
   @font-face {
-    font-family: "roboto-regular";
+    font-family: "Roboto";
     src: url('./roboto-regular.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;

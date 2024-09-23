@@ -108,7 +108,6 @@ function render() {
   myChart.setOption(option)
 }
 const getBgColorStyle = (i:number)=>{
-    console.log('aaaa', i, chartColor.value[i])
     return `background:${chartColor.value[i]}`||''
 }
 onMounted(() => {

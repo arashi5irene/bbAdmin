@@ -6,7 +6,7 @@
   font-weight: normal;
 }
 html,body{
-  font-family: "NotoSans", "roboto-regular"!important;
+  font-family: "NotoSans", "Roboto", sans-serif !important;
 }
 
 .card{
