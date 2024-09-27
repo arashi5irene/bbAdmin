@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    copy: typeof import('./src/components/MemberTable copy.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
@@ -17,7 +16,6 @@ declare module 'vue' {
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
-    ElDivider: typeof import('element-plus/es')['ElDivider']
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
     ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
     ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
@@ -48,7 +46,7 @@ declare module 'vue' {
     IconTooling: typeof import('./src/components/icons/IconTooling.vue')['default']
     MemberBanner: typeof import('./src/components/MemberBanner.vue')['default']
     MemberDelDialog: typeof import('./src/components/MemberDelDialog.vue')['default']
-    MemberEdit: typeof import('./src/components/MemberEdit.vue')['default']
+    MemberDetail: typeof import('./src/components/MemberDetail.vue')['default']
     MemberEditDialog: typeof import('./src/components/MemberEditDialog.vue')['default']
     MemberTable: typeof import('./src/components/MemberTable.vue')['default']
     MemberTableHeader: typeof import('./src/components/MemberTableHeader.vue')['default']
