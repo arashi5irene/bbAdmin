@@ -150,6 +150,12 @@ input, textarea{
 .tableCol{
   height: 88px;
 }
+.dialogContainer{
+  border-top: 1px solid #DBE2EB; 
+  font-size: 18px;
+  color: #334D6E;
+  padding: 24px;
+}
 a,
 .green {
   text-decoration: none;

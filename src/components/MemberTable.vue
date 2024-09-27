@@ -61,10 +61,10 @@
 
         <div v-if="memberData.length!=0" class="pageFooter h-[88px] flex items-center justify-between px-6">
             <div class="flex items-center">
-                <el-button plain>
+                <el-button plain @click="setMemDelDialogShow(true)" :disabled="memberSelection.length == 0">
                     刪除會員
                 </el-button>
-                <p class="ml-6">已選中<span class="text-secondary">{{ multipleSelection.length }}</span>人</p>
+                <p class="ml-6">已選中<span class="text-secondary">{{ memberSelection.length }}</span>人</p>
             </div>
             <div class="flex items-center">
                 <el-pagination
@@ -78,6 +78,7 @@
             </div>
         </div>
         <MemberEditDialog v-if="memberDialogVisible" :docType="memDetailType" :nowMember="nowMember"/>
+        <MemberDelDialog v-if="memDelDialogVisible" :delMembers="memberSelection"/>
     </div>
     
 </template>
@@ -91,18 +92,27 @@ const defaultPageSize = ref(8)
 const memberDialogVisible  = ref(false)
 provide('memberDialogVisible', memberDialogVisible)
 const setMemberDialogShow = (val:boolean)=>{
+    memDelDialogVisible.value = false
     memberDialogVisible.value = val
 }
 provide('setMemberDialogShow', setMemberDialogShow)
+const memDelDialogVisible  = ref(false)
+provide('memDelDialogVisible', memDelDialogVisible)
+const setMemDelDialogShow = (val:boolean)=>{
+    memberDialogVisible.value = false
+    memDelDialogVisible.value = val
+}
+provide('setMemDelDialogShow', setMemDelDialogShow)
 const memDetailType = ref('insert')
 const setMemDetailType= (val:string='insert')=>{
     memDetailType.value = val
 }
 provide('setMemDetailType', setMemDetailType)
+
 const curPage = ref(1)
-const multipleSelection = ref<Member[]>([])
+const memberSelection = ref<Member[]>([])
 const handleSelectionChange = (val: Member[]) => {
-  multipleSelection.value = val
+    memberSelection.value = val
   console.log('val', val)
 }
 const memberData: Member[] = [
