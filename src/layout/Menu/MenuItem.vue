@@ -1,9 +1,9 @@
 <template>
-    <el-menu-item index="1-1">
+    <el-menu-item index="1-1" @click="handleSelect('/home')">
         <SvgIcon name="nav_homepage_default" class="menu-icon w-5 mr-6"/>
         首頁
     </el-menu-item>
-    <el-menu-item index="1-3">
+    <el-menu-item index="1-3" @click="handleSelect('/member')">
         <SvgIcon name="nav_user_default" class="menu-icon w-5 mr-6"/>
         會員照護
     </el-menu-item>
@@ -21,10 +21,20 @@
     </el-menu-item>
 </template>
 <script setup lang="ts">
+import { useRoute, useRouter } from 'vue-router'
 import SvgIcon from '@/components/SvgIcon.vue';
+
+const route = useRoute()
+const router = useRouter()
+const handleSelect = (item:string) => {
+  if (item === route.path) return
+  router.push(item!)
+}
 </script>
 <style lang="scss" scoped>
+
 .el-menu-item{
+    font-family: "NotoSans", "roboto-regular"!important;
     margin:16px 8px;
     border-radius: 8px;
     font-size: 18px;
