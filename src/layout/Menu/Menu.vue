@@ -17,7 +17,7 @@ import MenuItem from './MenuItem.vue'
 </script>
 <style lang="scss" scoped>
 .el-scrollbar{
-    height: calc(100vh - 160px);
+    height: calc(100vh - 180px);
 }
 .el-menu{
     border-right: 0;
