@@ -83,10 +83,11 @@
     
 </template>
 <script setup lang="ts">
-import {provide, ref} from 'vue'
+import {provide, ref, onMounted} from 'vue'
 import MemberTableHeader from '../components/MemberTableHeader.vue'
 import MemberEditDialog from '@/components/MemberEditDialog.vue';
 import SvgIcon from '@/components/SvgIcon.vue';
+import { fetchApi } from '@/utils/common.js'
 import type { Member } from '@/types/member';
 const defaultPageSize = ref(8)
 const memberDialogVisible  = ref(false)
@@ -175,5 +176,24 @@ const editMember = (row:Member)=>{
  memDetailType.value = 'edit'
  memberDialogVisible.value = true
 }
+const memberList = ref([])
+const queryMember = async ()=>{
+    const data = {
+        id_platform:'11',
+        id_agent:'22',
+        id_hospital:'33',
+      //  page:`${curPage.value},${pageCnt.value}`,
+      // ...apiData
+    }
+
+    const res = await fetchApi('ListMember', data)
+    if(res.Result == 'T'){
+      //  totalRec.value = Number(res.TotalRec)
+        memberList.value = res.Data
+    }
+}
+onMounted(()=>{
+     queryMember()
+})
 </script>
 <style lang="scss" scoped></style>
