@@ -21,32 +21,34 @@
                     <el-row>
                         <el-col :span="12">
                             <el-form-item label="會員姓名" required>
-                                <el-input v-model="memberData.name" placeholder="請輸入會員姓名" size="large" style="width: 328px;font-size:16px"/>
+                                <el-input v-model="memberData.name_member" placeholder="請輸入會員姓名" size="large" style="width: 328px;font-size:16px"/>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="性別" required>
                                 <el-select
-                                    v-model="memberData.name"
+                                    v-model="memberData.sex_member"
                                     placeholder="請選擇性別"
                                     size="large"
                                     style="width: 328px;font-size:16px"
                                 >
-                                    <el-option label="男" value="men" />
-                                    <el-option label="女" value="felmen" />
+                                    <el-option label="男" value="M" />
+                                    <el-option label="女" value="F" />
                                 </el-select>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-form-item label="身份證號" required>
-                        <el-input v-model="memberData.name" placeholder="請輸入身分證號" size="large" style="width: 678px;font-size:16px"/>
+                        <el-input v-model="memberData.no_national" placeholder="請輸入身分證號" size="large" style="width: 678px;font-size:16px"/>
                     </el-form-item>
                     <el-form-item label="生日" required>
                         <el-date-picker
-                            v-model="memberData.date"
+                            v-model="memberData.date_birth"
                             type="date"
                             placeholder="請選擇日期"
                             size="large"
+                            format="YYYY-MM-DD"
+                            value-format="YYYY-MM-DD"
                             style="width: 328px;font-size:16px"
                         />
                     </el-form-item>
@@ -55,19 +57,19 @@
                     <el-row>
                         <el-col :span="12">
                             <el-form-item label="手機" required>
-                                <el-input v-model="memberData.name" placeholder="請輸入手機" size="large" style="width: 328px;font-size:16px"/>
+                                <el-input v-model="memberData.phone_member" placeholder="請輸入手機" size="large" style="width: 328px;font-size:16px"/>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="電子郵件" required>
-                                <el-input v-model="memberData.name" placeholder="請輸入電子郵件" size="large" style="width: 328px;font-size:16px"/>
+                                <el-input v-model="memberData.mail_member" placeholder="請輸入電子郵件" size="large" style="width: 328px;font-size:16px"/>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-form-item label="通訊地址">
                         <el-col :span="8">
                             <el-select
-                                    v-model="memberData.name"
+                                    v-model="memberData.nation_patient"
                                     placeholder="請選擇國家"
                                     size="large"
                                     style="width: 210px;font-size:16px"
@@ -78,7 +80,7 @@
                         </el-col>
                         <el-col :span="8">
                             <el-select
-                                    v-model="memberData.name"
+                                    v-model="memberData.id_addr_city"
                                     placeholder="請選擇縣市"
                                     size="large"
                                     style="width: 210px;font-size:16px"
@@ -89,7 +91,7 @@
                         </el-col>
                         <el-col :span="8">
                             <el-select
-                                    v-model="memberData.name"
+                                    v-model="memberData.id_addr_area"
                                     placeholder="請選擇鄉鎮市區"
                                     size="large"
                                     style="width: 210px;font-size:16px"
@@ -100,7 +102,7 @@
                         </el-col>
                         <el-col :span="24">
                             <el-input
-                                v-model="memberData.name"
+                                v-model="memberData.addr_detail"
                                 style="width: 678px;height: 96px;padding-top:24px"
                                  :autosize="{ minRows: 4, maxRows: 4 }"
                                 type="textarea"
@@ -117,7 +119,7 @@
                 <el-button v-if="activeTab== 'first'" color="#1292BE" @click="activeTab = 'second'" style="width:132px">
                 下一步
                 </el-button>
-                <el-button v-else color="#1292BE" @click="setMemberDialogShow(false)" style="width:132px">
+                <el-button v-else color="#1292BE" @click="setMember" style="width:132px">
                 確定
                 </el-button>
             </div>
@@ -125,11 +127,12 @@
     </el-dialog>
 </template>
 <script lang="ts" setup>
-import { ref, inject, defineProps } from 'vue'
+import { ref, inject, defineProps, onMounted } from 'vue'
 import type { Ref } from 'vue'
 import type { Member } from '@/types/member';
 import type { TabsPaneContext} from 'element-plus'
 import UploadPic from '@/components/UploadPic.vue'
+import { fetchApi } from '@/utils/common'
 const props = defineProps({
     docType: {
       type: String,
@@ -151,5 +154,58 @@ const activeTab = ref('first')
 const clickTab = (tab: TabsPaneContext)=>{
     console.log(tab)
 }
+const queryMember = inject('queryMember') as () => void
+const setMember = ()=>{
+    if(props.docType == 'insert'){
+        saveMember()
+    }else{
+        saveMember('UPDATE')
+    }
+}
+const saveMember = async (type="INSERT")=>{
+    console.log('memberData', memberData)
+    let req = {
+        action:type,
+        id_edit:'test', 
+        id_member: type == 'INSERT'?undefined:memberData.value.id_member,
+        name_member:memberData.value.name_member,
+        sex_member:memberData.value.sex_member,
+        no_national:memberData.value.no_national,
+        date_birth:memberData.value.date_birth,
+        phone_member:memberData.value.phone_member,
+        nation_patient:memberData.value.nation_patient,
+        id_addr_city:memberData.value.id_addr_city,
+        id_addr_area:memberData.value.id_addr_area,
+        addr_detail:memberData.value.addr_detail,
+        mail_member:memberData.value.mail_member
+    }
+    if(type== 'INSERT'){
+        req = {
+            ...req,
+            id_platform:'11',
+            id_agent:'22',
+            id_hospital:'33',
+        }
+    }
+    const res = await fetchApi('EditMember', req)
+    if(res.Result == 'T'){
+        queryMember()
+        setMemberDialogShow(false)
+    }
+}
+const fetchMember = async()=>{
+    const data = {
+        id_member:props.nowMember.id_member,
+    }
 
+    const res = await fetchApi('FormMember', data)
+    if(res.Result == 'T'){
+      memberData.value = res.Data[0]
+    }
+}
+onMounted(()=>{
+    if(props.docType == 'update'){
+        fetchMember()
+    }
+})
 </script>

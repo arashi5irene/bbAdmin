@@ -10,34 +10,39 @@
             @selection-change="handleSelectionChange"
         >
             <el-table-column type="selection" width="55" />
-            <el-table-column label="姓名/身份證號" sortable :sort-by="['date', 'name']" width="220">
+            <el-table-column label="姓名/身份證號" sortable :sort-by="['name_member', 'no_national']" width="220">
             <template #default="scope">
                 <div class="flex items-center">
-                    <img src="/images/avatar_user_48px.svg" class="h-12 rounded-full mr-3"/>
+                    <img v-if="scope.row.file_base64" :src="scope.row.file_base64" alt="Red dot" class="h-12 rounded-full mr-3"/>
+                    <img v-else src="/images/avatar_user_48px.svg" class="h-12 rounded-full mr-3"/>
                     <div>
-                        <div>{{ scope.row.date }}</div>
-                        <div>{{ scope.row.name }}</div>
+                        <div>{{ scope.row.name_member }}</div>
+                        <div>{{ scope.row.no_national }}</div>
                     </div>
                 </div>
             </template>
             </el-table-column>
-            <el-table-column label="性別/年齡" sortable :sort-by="['id', 'id']" width="120">
+            <el-table-column label="性別/年齡" sortable :sort-by="['sex_member', 'age_member']" width="120">
             <template #default="scope">
                 <div class="flex items-center">
-                    <SvgIcon name="ic_gender_female" class="w-6 h-6 mr-2"/>
-                    <div>{{ scope.row.id }}</div>
+                    <SvgIcon :name="scope.row.sex_member == 'M'?'ic_gender_male':'ic_gender_female'" class="w-6 h-6 mr-2"/>
+                    <div>{{ scope.row.age_member }}</div>
                 </div>
             </template>
             </el-table-column>
-            <el-table-column property="address" label="手機" />
+            <el-table-column property="phone_member" label="手機" />
             <el-table-column label="最近量測日期" sortable sort-by="date">
                 <template #default="scope">
-                    <div>手動新增</div>
-                    <div>{{ scope.row.date }}</div>
+                    <div>{{scope.row.measure_from== '1'?"手動新增":"設備同步"}}</div>
+                    <div>{{scope.row.date_measure }}</div>
                 </template>
             </el-table-column>
 
-            <el-table-column label="健康/異常" />
+            <el-table-column label="健康/異常">
+                <template #default="scope">
+                    <el-tag :type="item.type" v-for="(item) in getMeasureStatus(scope.row.detail_measure)" style="margin:0 3px">{{ item.data}}</el-tag>
+                </template>
+            </el-table-column>
             <el-table-column property="date" label="功能" >
                 <template #default="scope">
                     <div>
@@ -70,9 +75,9 @@
                 <el-pagination
                 size="large" background
                 layout="jumper, prev, pager, next, total"
-                :default-page-size="defaultPageSize"
+                :default-page-size="pageCnt"
                 :current-page="curPage"
-                :total="1000" 
+                :total="totalRec" 
                 @current-change="handleCurrentChange"
                 />
             </div>
@@ -87,9 +92,12 @@ import {provide, ref, onMounted} from 'vue'
 import MemberTableHeader from '../components/MemberTableHeader.vue'
 import MemberEditDialog from '@/components/MemberEditDialog.vue';
 import SvgIcon from '@/components/SvgIcon.vue';
-import { fetchApi } from '@/utils/common.js'
+import { fetchApi } from '@/utils/common.ts'
 import type { Member } from '@/types/member';
-const defaultPageSize = ref(8)
+
+const showNewMember = ()=>{
+    
+}
 const memberDialogVisible  = ref(false)
 provide('memberDialogVisible', memberDialogVisible)
 const setMemberDialogShow = (val:boolean)=>{
@@ -110,90 +118,88 @@ const setMemDetailType= (val:string='insert')=>{
 }
 provide('setMemDetailType', setMemDetailType)
 
-const curPage = ref(1)
 const memberSelection = ref<Member[]>([])
 const handleSelectionChange = (val: Member[]) => {
     memberSelection.value = val
   console.log('val', val)
 }
-const memberData: Member[] = [
-  {
-    id: 1,
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    id: 2,
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    id: 3,
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    id: 4,
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    id: 5,
-    date: '2016-05-08',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    id: 6,
-    date: '2016-05-06',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    id: 7,
-    date: '2016-05-07',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    id: 8,
-    date: '2016-05-06',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  }
-]
 
 const handleCurrentChange = (val:number)=>{
     curPage.value = val
 }
 const nowMember = ref<Member>({})
+
 const editMember = (row:Member)=>{
  nowMember.value = row
- memDetailType.value = 'edit'
+ memDetailType.value = 'update'
  memberDialogVisible.value = true
 }
-const memberList = ref([])
+
+const totalRec = ref(0)
+const listLoading = ref(false)
+const curPage = ref(1)
+const setCurPage = (val:number)=>{
+    curPage.value = val
+}
+provide('curPage', curPage)
+provide('setCurPage', setCurPage)
+
+const pageCnt = ref(10)
+const setPageCnt = (val:number)=>{
+    pageCnt.value = val
+}
+provide('pageCnt', pageCnt)
+provide('setPageCnt', setPageCnt)
+
+provide('listLoading', listLoading)
+let apiData = {}
+const setApiData = (searchData:object = apiData)=>{
+    apiData = {
+        ...searchData
+    }
+    queryMember()
+}
+provide('setApiData', setApiData)
+const memberData = ref<Member[]>([])
 const queryMember = async ()=>{
     const data = {
         id_platform:'11',
         id_agent:'22',
         id_hospital:'33',
-      //  page:`${curPage.value},${pageCnt.value}`,
-      // ...apiData
+        page:`${curPage.value},${pageCnt.value}`,
+       ...apiData
     }
 
     const res = await fetchApi('ListMember', data)
     if(res.Result == 'T'){
-      //  totalRec.value = Number(res.TotalRec)
-        memberList.value = res.Data
+        totalRec.value = Number(res.TotalRec)
+      memberData.value = res.Data
     }
 }
+provide('queryMember', queryMember)
+const getMeasureStatus = (detail_measure:any) =>{
+    const measureType = {
+        pressure:'血壓',
+        sugar:'血糖',
+        heartbeat:'心跳',
+        oxygen:'血氧',
+        temp:'體溫'
+    }
+    const measureData = detail_measure[0]||{}
+    let measureStatus = []
+    for (let i = 0; i<Object.keys(measureData).length;i++) {
+        const key = Object.keys(measureData)[i]
+        if (measureData[key] && measureData[key] == 'N'&&measureType[key]) {
+            measureStatus.push({data:measureType[key], type:'danger'})
+        }
+        if( measureData['normal'] == 'Y' ){
+            return [{type:'info',data:'正常'}]
+        }
+    }
+    return measureStatus
+}
 onMounted(()=>{
-     queryMember()
+    setApiData()
 })
 </script>
 <style lang="scss" scoped></style>

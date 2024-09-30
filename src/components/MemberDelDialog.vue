@@ -40,6 +40,9 @@ const memDelDialogVisible = inject('memDelDialogVisible') as Ref<boolean>
 
 const setMemDelDialogShow = inject('setMemDelDialogShow') as (dialogVisible: boolean)=>void
 
+const delMember = ()=>{
+    
+}
 
 
 </script>

@@ -15,13 +15,13 @@
                     >
                     <template #prepend>
                         <el-select v-model="queryType" placeholder="Select" style="width: 115px;background-color: #fff;height: 48px;">
-                        <el-option label="姓名" value="1" />
-                        <el-option label="身份證" value="2" />
-                        <el-option label="年齡" value="3" />
+                        <el-option label="姓名" value="name_member" />
+                        <!-- <el-option label="身份證" value="2" />
+                        <el-option label="年齡" value="3" /> -->
                         </el-select>
                     </template>
                     <template #append>
-                        <el-button :icon="Search" />
+                        <el-button :icon="Search"  @click="search"/>
                     </template>
                     </el-input>
                 </div>
@@ -29,7 +29,7 @@
                     匯出報表
                     <SvgIcon name="btn_export_report_default" class="btnIcon"/>
                 </el-button>
-                <el-button type="success" plain class="greenBtn" color="#8ebb28">
+                <el-button type="success" plain class="greenBtn" color="#8ebb28" @click="search">
                     重新整理
                     <SvgIcon name="btn_refresh_default" class="btnIcon"/>
                 </el-button>
@@ -46,8 +46,15 @@ import { Search } from '@element-plus/icons-vue'
 import SvgIcon from '@/components/SvgIcon.vue';
 
 const queryValue = ref('')
-const queryType = ref('1')
+const queryType = ref('name_member')
 const setMemberDialogShow = inject('setMemberDialogShow') as (dialogVisible: boolean)=>void
+const setApiData = inject('setApiData') as (value:object) => void
+const search = ()=>{
+  const data:any = {}
+  data[queryType.value] = queryValue.value
+  setApiData(data)
+}
+
 </script>
 <style lang="scss" scoped>
 .el-select {
